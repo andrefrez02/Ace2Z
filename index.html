@@ -1,0 +1,149 @@
+<html>
+<style>
+  :root {
+    --bg-void: #110b11;
+    --card-base: #fbf5de;
+    --fire-red: #ff4d4d;
+    --fire-orange: #ff9e2c;
+    --text-main: #fbf5de;
+    --text-dim: #a89f91;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-void);
+    color: var(--text-main);
+    font-family: 'Roboto Mono', monospace;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
+  }
+
+  /* --- BACKGROUND BALATRO (CSS PURO) --- */
+  .balatro-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    /* Fica atrás de tudo */
+    background: #0a050a;
+    overflow: hidden;
+  }
+
+  /* Camada 1: O "Plasma" Vermelho */
+  .balatro-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-conic-gradient(from 0deg,
+        transparent 0deg,
+        var(--fire-red) 30deg,
+        transparent 60deg,
+        var(--bg-void) 90deg);
+    filter: blur(80px);
+    /* O segredo do efeito líquido */
+    opacity: 0.4;
+    animation: spin 20s linear infinite;
+  }
+
+  /* Camada 2: O "Plasma" Laranja (Gira ao contrário) */
+  .balatro-bg::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-conic-gradient(from 180deg,
+        transparent 0deg,
+        var(--fire-orange) 40deg,
+        transparent 80deg,
+        var(--bg-void) 120deg);
+    filter: blur(100px);
+    opacity: 0.3;
+    animation: spin-reverse 25s linear infinite;
+    mix-blend-mode: screen;
+    /* Mistura as cores como luz */
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin-reverse {
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+
+  /* --- SCANLINES (CRT) --- */
+  .crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.6;
+  }
+
+  .crt-overlay::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
+  }
+
+  /* --- LAYOUT --- */
+  .container {
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    margin: auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+    display: flex;
+
+    h1 {
+      margin: auto;
+      font-size: 3.5em;
+      transform: translate(0, -20px);
+    }
+  }
+</style>
+
+<body>
+  <div class="balatro-bg"></div>
+  <div class="crt-overlay"></div>
+
+  <div class="container">
+    <h1>Redirecionando...</h1>
+    <script defer>setTimeout(() => {
+        window.location.href = "/concept.html"
+      }
+        , 1000);
+    </script>
+</body>
+
+</html>
