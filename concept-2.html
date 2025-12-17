@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FREZ DEV | Arquiteto de Soluções Digitais</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rajdhani:wght@600;800&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="shortcut icon" href="logo-principal-lg.svg" type="image/x-icon">
+
+  <style>
+    :root {
+      /* --- TEMA DARK (PADRÃO) --- */
+      --bg-main: #0F1115;
+      --bg-secondary: #1A1D24;
+      --bg-main-light: #ffffffe6;
+      --accent-orange: #FF6B00;
+      --accent-blue: #A0C4D9;
+      --text-light: #FFFFFF;
+      --text-gray: #8F9BA8;
+      --grid-color: rgba(160, 196, 217, 0.05);
+      --border-color: rgba(255, 255, 255, 0.05);
+      --layer-bg: rgba(26, 29, 36, 0.8);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+
+      --logo-top: #F28937;
+      --logo-right-outside: #b8d4e4;
+      --logo-right-inside: #a8c3d2;
+      --logo-left: #D75E29;
+      --logo-sombra: #000;
+    }
+
+    #logo-principal {
+      width: 50px;
+
+      /* TOP */
+      & path[fill='#F28937'] {
+        fill: var(--logo-top) !important;
+      }
+
+      /* RIGHT - OUTSIDE */
+      & path[fill='#191C1E'] {
+        fill: var(--logo-right-outside) !important;
+      }
+
+      /* RIGHT - INSIDE*/
+      & path[fill='#151617'] {
+        fill: var(--logo-right-inside) !important;
+      }
+
+      /* LEFT */
+      & path[fill='#D75E29'] {
+        fill: var(--logo-left) !important;
+      }
+
+      /* SOMBRA / DETALHE */
+      & path[fill='black'] {
+        fill: var(--bg-main) !important;
+      }
+    }
+
+    /* --- TEMA LIGHT (ATIVADO VIA JS) --- */
+    [data-theme="light"] {
+      --bg-main: #F0F2F5;
+      /* Cinza quase branco */
+      --bg-secondary: #FFFFFF;
+      /* Branco puro para cards */
+      --accent-orange: #E65100;
+      /* Laranja um pouco mais escuro para leitura */
+      --accent-blue: #2C3E50;
+      /* Azul escuro para contraste */
+      --text-light: #1A1A1A;
+      /* Texto preto */
+      --text-gray: #555555;
+      /* Texto cinza escuro */
+      --grid-color: rgba(0, 0, 0, 0.05);
+      /* Grade escura suave */
+      --border-color: rgba(0, 0, 0, 0.1);
+      --layer-bg: rgba(255, 255, 255, 0.9);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --logo-top: #F28937;
+      --logo-right-outside: #191C1E;
+      --logo-right-inside: #151617;
+      --logo-left: #D75E29;
+      --logo-sombra: #000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      /* Padrão de Grid Técnico */
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+    }
+
+    /* --- BOTÃO DE TEMA --- */
+    .theme-toggle {
+      background: transparent;
+      border: 2px solid var(--accent-orange);
+      color: var(--accent-orange);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: 0.3s;
+      margin-left: 20px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-orange);
+      color: var(--bg-main);
+      transform: rotate(15deg);
+    }
+
+    /* --- TIPOGRAFIA --- */
+    h1,
+    h2,
+    h3,
+    .brand-font,
+    .btn {
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    h2::before {
+      content: '//';
+      color: var(--accent-orange);
+      margin-right: 10px;
+    }
+
+    .text-orange {
+      color: var(--accent-orange);
+    }
+
+    .text-blue {
+      color: var(--accent-blue);
+    }
+
+    /* --- COMPONENTES --- */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 8rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 1.2rem 3rem;
+      background: transparent;
+      color: var(--accent-orange);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.2rem;
+      border: 3px solid var(--accent-orange);
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-orange);
+      color: var(--bg-main);
+      box-shadow: 0 0 30px rgba(255, 107, 0, 0.4);
+    }
+
+    /* --- HEADER --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 17, 21, 0.9);
+      /* Mantive dark no header para contraste sempre bom */
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    [data-theme="light"] header {
+      background: var(--bg-main-light);
+      /* Header claro no light mode */
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--accent-orange);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-gray);
+      text-decoration: none;
+      font-family: 'Rajdhani';
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    nav a:hover {
+      color: var(--accent-orange);
+    }
+
+    .nav-contact {
+      border: 2px solid var(--accent-orange);
+      padding: 0.5rem 1.5rem;
+    }
+
+    .nav-contact:hover {
+      background: var(--accent-orange);
+      color: var(--bg-main);
+    }
+
+    /* --- HERO --- */
+    .hero {
+      min-height: 95vh;
+      display: flex;
+      align-items: center;
+      padding-top: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-architectural-bg {
+      position: absolute;
+      top: 50%;
+      right: -10%;
+      transform: translateY(-50%) rotate(-15deg);
+      width: 600px;
+      height: 800px;
+      border: 3px solid rgba(255, 107, 0, 0.1);
+      background: linear-gradient(to bottom right, transparent 48%, var(--accent-orange) 49%, var(--accent-orange) 51%, transparent 52%), linear-gradient(to bottom left, transparent 48%, var(--accent-orange) 49%, var(--accent-orange) 51%, transparent 52%);
+      background-size: 100px 100px;
+      opacity: 0.2;
+      z-index: -1;
+      clip-path: polygon(0 0, 100% 0, 100% 20%, 40% 20%, 40% 40%, 80% 40%, 80% 60%, 40% 60%, 40% 100%, 0 100%);
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--text-gray);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      border-left: 4px solid var(--accent-blue);
+      padding-left: 20px;
+    }
+
+    /* --- STACK DIAGRAM --- */
+    .stack-diagram {
+      position: relative;
+      height: 500px;
+      perspective: 2000px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .layer {
+      width: 350px;
+      height: 80px;
+      background: var(--layer-bg);
+      border: 2px solid var(--accent-blue);
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani';
+      font-weight: 800;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      transform: rotateX(55deg) rotateZ(-15deg) translateZ(0);
+      box-shadow: 0 20px 40px var(--shadow-color);
+      transition: all 0.4s ease;
+      position: absolute;
+      backdrop-filter: blur(10px);
+    }
+
+    .l1 {
+      top: 50px;
+      z-index: 4;
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    .l2 {
+      top: 150px;
+      z-index: 3;
+    }
+
+    .l3 {
+      top: 250px;
+      z-index: 2;
+    }
+
+    .l4 {
+      top: 350px;
+      z-index: 1;
+      border-color: var(--text-gray);
+      color: var(--text-gray);
+      background: var(--bg-secondary);
+    }
+
+    .stack-diagram:hover .l1 {
+      transform: rotateX(55deg) rotateZ(-15deg) translateZ(60px);
+    }
+
+    .stack-diagram:hover .l2 {
+      transform: rotateX(55deg) rotateZ(-15deg) translateZ(40px);
+    }
+
+    .stack-diagram:hover .l3 {
+      transform: rotateX(55deg) rotateZ(-15deg) translateZ(20px);
+    }
+
+    /* --- PROJETOS --- */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+
+    .project-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 3rem 2rem;
+      position: relative;
+      transition: all 0.3s ease;
+      border-top: 3px solid var(--accent-blue);
+    }
+
+    .project-card:hover {
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 40px rgba(255, 107, 0, 0.1);
+      transform: translateY(-10px);
+      background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .project-card h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .project-card p {
+      color: var(--text-gray);
+      margin-bottom: 2rem;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 0.9rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange);
+      padding: 6px 12px;
+      text-transform: uppercase;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      background: var(--bg-secondary);
+      padding: 5rem 0;
+      text-align: center;
+      border-top: 3px solid var(--accent-orange);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 3rem 0;
+    }
+
+    .social-links a {
+      color: var(--text-gray);
+      text-decoration: none;
+      font-family: 'Rajdhani';
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: 0.3s;
+    }
+
+    .social-links a:hover {
+      color: var(--accent-orange);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 3.5rem;
+      }
+
+      .hero {
+        padding-top: 150px;
+        text-align: left;
+      }
+
+      .hero-architectural-bg {
+        opacity: 0.1;
+        right: -50%;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .stack-diagram {
+        height: 400px;
+        transform: scale(0.8);
+      }
+
+      nav ul {
+        gap: 1rem;
+      }
+
+      nav a:not(.nav-contact) {
+        display: none;
+      }
+
+      /* Oculta links no mobile, mantem botão e toggle */
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      <a href="#" class="logo brand-font">
+        <svg id="logo-principal" width="80" height="80" viewBox="0 0 80 80" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_25_771)">
+            <path d="M73.9814 52.7795L43.7889 69.7869L43.6699 79.1363L73.8669 62.129L73.9814 52.7795Z" fill="#191C1E" />
+            <path d="M78.1368 50.4911L68.3977 46.6815L33.7941 66.3198L43.8255 69.8372L78.1368 50.4911Z"
+              fill="#F28937" />
+            <path d="M61.1811 26.8676L71.1931 29.1975V54.3048L61.1811 50.7789L61.1811 26.8676Z" fill="#151617" />
+            <path d="M78.4365 16.1721L43.6387 36.298L34.1074 32.7414L68.4912 12.7209L78.4365 16.1721Z" fill="#F28937" />
+            <path
+              d="M78.3252 25.173L50.8076 40.9963L50.8115 75.0998L43.5801 79.1896V45.1525L43.3213 45.3019L43.5381 36.1398L78.4248 16.1711L78.3252 25.173Z"
+              fill="#191C1E" />
+            <path d="M78.4205 25.1216L71.1931 29.2145V63.5717L78.4265 59.4784L78.4205 25.1216Z" fill="#191C1E" />
+            <path d="M43.5801 36.1896V79.1896L33.1553 75.6008V32.6008L43.5801 36.1896Z" fill="#D75E29" />
+            <path
+              d="M42.3316 10.1852L71.3043 19.8951V19.8902L72.1246 19.4156V19.3883L78.5387 15.6773V15.1002L66.5201 11.0318L66.8404 10.0846L78.6178 14.0719L79.0758 14.2213L79.359 14.3131V19.0279L79.3619 24.5543L78.5406 25.0279L78.5416 25.0562L71.3043 29.2398V29.2457L41.5045 19.2574L31.3268 25.1471L40.5377 28.2652L40.9967 28.4146L41.2799 28.5064V34.2594H41.2789L41.2809 39.3502L34.0494 43.5338V43.5279L33.2184 44.0094V44.0084L19.6275 39.4537L19.6314 65.7506L18.8111 66.2135L18.8121 66.2525L11.5797 70.3424V36.7555L3.40097 34.0152V24.6646L17.8834 29.5182V23.5768L18.7037 23.1012V23.0748L42.3316 9.39999V10.1852ZM21.6109 30.7682L33.2184 34.6588V34.6598L40.4459 30.4762V30.4801L40.4596 30.4713V29.2935L30.1754 25.8131L21.6109 30.7682Z"
+              fill="black" />
+            <path
+              d="M41.5166 18.0998L18.8076 31.2394L18.8115 65.0998L11.5801 69.1896V35.1154L17.8838 31.466V22.424L41.5117 8.74921L41.5166 18.0998ZM40.4609 38.6457L33.2295 42.8303V33.4797L40.457 29.2961L40.4609 38.6457ZM78.542 23.9035L71.3047 28.0881V18.7375L78.5371 14.5539L78.542 23.9035Z"
+              fill="#191C1E" />
+            <path
+              d="M48.7314 4.54608H48.7295L78.542 14.5617L71.3008 18.7668L41.5039 8.75507L18.8037 21.9787L40.4609 29.2805L33.2197 33.4855L11.5762 26.1877L11.5752 26.1896L1.5 22.8L38.6562 1.15643L48.7314 4.54608Z"
+              fill="#F28937" />
+            <path
+              d="M11.5801 26.1896V26.1848L33.2188 33.4797V42.8303L11.5801 35.5344V69.1896L1.5 65.8V22.8L11.5801 26.1896Z"
+              fill="#D75E29" />
+            <path d="M41.487 8.74921L71.3047 18.7428V28.093L41.487 18.0993V8.74921Z" fill="#151617" />
+          </g>
+          <defs>
+            <clipPath id="clip0_25_771">
+              <rect width="80" height="80" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+
+        FREZ<span>DEV</span>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#conceito">Conceito</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato" class="nav-contact">Contato</a></li>
+          <li>
+            <button class="theme-toggle" id="theme-btn" aria-label="Alternar Tema">
+              <i class="ph ph-sun"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-architectural-bg"></div>
+      <div class="container">
+        <div class="hero-content">
+          <h1>ARQUITETURA DIGITAL<br> <span class="text-orange">SÓLIDA</span> & FULL STACK.</h1>
+          <p class="hero-subtitle">
+            Eu não apenas escrevo código; eu projeto ecossistemas. Especialista em conectar React, .NET e Automação em
+            estruturas robustas.
+          </p>
+          <a href="#projetos" class="btn">VER ESTRUTURAS</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="conceito" class="about-section">
+      <div class="container about-grid">
+        <div class="stack-diagram">
+          <div class="layer l1">FRONTEND (REACT / NEXT.JS)</div>
+          <div class="layer l2">BACKEND API (.NET 8 / C#)</div>
+          <div class="layer l3">DATABASE & INFRA</div>
+          <div class="layer l4">AUTOMAÇÃO (PYTHON / BOTS)</div>
+        </div>
+
+        <div class="about-text">
+          <h2>O ARQUITETO DE <span class="text-orange">SISTEMAS</span></h2>
+          <p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--text-light);">
+            No desenvolvimento moderno, empilhar tecnologias não é suficiente. O segredo está em como elas se encaixam e
+            se comunicam.
+          </p>
+          <p style="color: var(--text-gray);">
+            Minha abordagem é estrutural. Crio sistemas onde interfaces <strong class="text-blue">React</strong> fluidas
+            se conectam a backends <strong class="text-blue">.NET</strong> de alta performance, tudo apoiado por scripts
+            de <strong class="text-orange">Automação Python</strong> que eliminam trabalho manual.
+          </p>
+          <br>
+          <p
+            style="font-family: 'Rajdhani'; font-weight: 700; font-size: 1.3rem; border-left: 3px solid var(--accent-orange); padding-left: 15px; color: var(--text-light);">
+            "Código limpo é a fundação. Performance é a estrutura."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projetos">
+      <div class="container">
+        <h2>ESTRUTURAS <span class="text-orange">CONSTRUÍDAS</span></h2>
+        <p style="font-size: 1.2rem; color: var(--text-gray); max-width: 600px;">Uma seleção de projetos projetados com
+          foco em escalabilidade e eficiência.</p>
+
+        <div class="projects-grid">
+          <article class="project-card">
+            <h3>PLATAFORMA SaaS B2B</h3>
+            <p>Sistema de gestão completo com arquitetura de microsserviços e dashboard em tempo real.</p>
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">Next.js</span>
+              <span class="tag">.NET 8 API</span>
+              <span class="tag">SQL</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <h3 class="text-orange">BOT DE AUTOMAÇÃO ETL</h3>
+            <p>Script Python para extração massiva de dados, transformação e carregamento automático em ERPs.</p>
+            <div class="project-tags">
+              <span class="tag" style="border-color: var(--accent-blue); color: var(--accent-blue)">Python</span>
+              <span class="tag" style="border-color: var(--accent-blue); color: var(--accent-blue)">Selenium</span>
+              <span class="tag" style="border-color: var(--accent-blue); color: var(--accent-blue)">Pandas</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <h3>E-COMMERCE HEADLESS</h3>
+            <p>Front-end ultrarrápido focado em SEO e conversão, consumindo APIs de pagamento externas.</p>
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">Tailwind</span>
+              <span class="tag">Node</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contato">
+    <div class="container">
+      <div class="logo brand-font footer-brand" style="justify-content: center;">
+        <svg id="logo-principal" width="80" height="80" viewBox="0 0 80 80" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_25_771)">
+            <path d="M73.9814 52.7795L43.7889 69.7869L43.6699 79.1363L73.8669 62.129L73.9814 52.7795Z" fill="#191C1E" />
+            <path d="M78.1368 50.4911L68.3977 46.6815L33.7941 66.3198L43.8255 69.8372L78.1368 50.4911Z"
+              fill="#F28937" />
+            <path d="M61.1811 26.8676L71.1931 29.1975V54.3048L61.1811 50.7789L61.1811 26.8676Z" fill="#151617" />
+            <path d="M78.4365 16.1721L43.6387 36.298L34.1074 32.7414L68.4912 12.7209L78.4365 16.1721Z" fill="#F28937" />
+            <path
+              d="M78.3252 25.173L50.8076 40.9963L50.8115 75.0998L43.5801 79.1896V45.1525L43.3213 45.3019L43.5381 36.1398L78.4248 16.1711L78.3252 25.173Z"
+              fill="#191C1E" />
+            <path d="M78.4205 25.1216L71.1931 29.2145V63.5717L78.4265 59.4784L78.4205 25.1216Z" fill="#191C1E" />
+            <path d="M43.5801 36.1896V79.1896L33.1553 75.6008V32.6008L43.5801 36.1896Z" fill="#D75E29" />
+            <path
+              d="M42.3316 10.1852L71.3043 19.8951V19.8902L72.1246 19.4156V19.3883L78.5387 15.6773V15.1002L66.5201 11.0318L66.8404 10.0846L78.6178 14.0719L79.0758 14.2213L79.359 14.3131V19.0279L79.3619 24.5543L78.5406 25.0279L78.5416 25.0562L71.3043 29.2398V29.2457L41.5045 19.2574L31.3268 25.1471L40.5377 28.2652L40.9967 28.4146L41.2799 28.5064V34.2594H41.2789L41.2809 39.3502L34.0494 43.5338V43.5279L33.2184 44.0094V44.0084L19.6275 39.4537L19.6314 65.7506L18.8111 66.2135L18.8121 66.2525L11.5797 70.3424V36.7555L3.40097 34.0152V24.6646L17.8834 29.5182V23.5768L18.7037 23.1012V23.0748L42.3316 9.39999V10.1852ZM21.6109 30.7682L33.2184 34.6588V34.6598L40.4459 30.4762V30.4801L40.4596 30.4713V29.2935L30.1754 25.8131L21.6109 30.7682Z"
+              fill="black" />
+            <path
+              d="M41.5166 18.0998L18.8076 31.2394L18.8115 65.0998L11.5801 69.1896V35.1154L17.8838 31.466V22.424L41.5117 8.74921L41.5166 18.0998ZM40.4609 38.6457L33.2295 42.8303V33.4797L40.457 29.2961L40.4609 38.6457ZM78.542 23.9035L71.3047 28.0881V18.7375L78.5371 14.5539L78.542 23.9035Z"
+              fill="#191C1E" />
+            <path
+              d="M48.7314 4.54608H48.7295L78.542 14.5617L71.3008 18.7668L41.5039 8.75507L18.8037 21.9787L40.4609 29.2805L33.2197 33.4855L11.5762 26.1877L11.5752 26.1896L1.5 22.8L38.6562 1.15643L48.7314 4.54608Z"
+              fill="#F28937" />
+            <path
+              d="M11.5801 26.1896V26.1848L33.2188 33.4797V42.8303L11.5801 35.5344V69.1896L1.5 65.8V22.8L11.5801 26.1896Z"
+              fill="#D75E29" />
+            <path d="M41.487 8.74921L71.3047 18.7428V28.093L41.487 18.0993V8.74921Z" fill="#151617" />
+          </g>
+          <defs>
+            <clipPath id="clip0_25_771">
+              <rect width="80" height="80" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+        FREZ<span>DEV</span>
+      </div>
+      <h3 style="font-size: 2rem; margin-bottom: 2rem;">VAMOS PROJETAR SUA PRÓXIMA SOLUÇÃO?</h3>
+      <div style="margin-top: 3rem;">
+        <a href="mailto:andre@frezdev.com.br" class="btn">INICIAR PROJETO</a>
+      </div>
+      <div class="social-links">
+        <a href="#">LinkedIn</a>
+        <a href="#">GitHub</a>
+        <a href="#">WhatsApp</a>
+      </div>
+      <p
+        style="margin-top: 5rem; color: #555; font-size: 0.9rem; font-family: 'Rajdhani'; text-transform: uppercase; letter-spacing: 2px;">
+        © 2024 Frez Dev. Arquitetura Digital.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const themeBtn = document.getElementById('theme-btn');
+    const themeIcon = themeBtn.querySelector('i');
+    const html = document.documentElement;
+
+    // Verifica se tem preferência salva
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      html.setAttribute('data-theme', savedTheme);
+      updateIcon(savedTheme);
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateIcon(newTheme);
+    });
+
+    function updateIcon(theme) {
+      if (theme === 'light') {
+        themeIcon.classList.remove('ph-sun');
+        themeIcon.classList.add('ph-moon'); // Mostra lua para voltar ao dark
+      } else {
+        themeIcon.classList.remove('ph-moon');
+        themeIcon.classList.add('ph-sun'); // Mostra sol para ir ao light
+      }
+    }
+  </script>
+</body>
+
+</html>
